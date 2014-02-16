@@ -23,7 +23,7 @@ public class ScraperConfiguration {
 	
 	private static Logger log = Logger.getLogger(ScraperConfiguration.class.getName());
 	
-	private List<ScraperConfigurationEntry> configurationEntries = new ArrayList<ScraperConfigurationEntry>();
+	private List<Shop> shops = new ArrayList<Shop>();
 
 	public static ScraperConfiguration getInstance(String path){
 		InputStream is = null;
@@ -37,7 +37,7 @@ public class ScraperConfiguration {
 			}
 			Reader configReader = new InputStreamReader(is); 
 
-			JAXBContext context = JAXBContext.newInstance(new Class[] {ScraperConfiguration.class});
+			JAXBContext context = JAXBContext.newInstance(new Class[] {ScraperConfiguration.class, Shop.class, Category.class, DataEntry.class, DataField.class});
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
 			ScraperConfiguration xPathFilterConfiguration  = (ScraperConfiguration) unmarshaller.unmarshal(configReader);
@@ -54,12 +54,12 @@ public class ScraperConfiguration {
 		return null;
 	}
 	
-	@XmlElement(name="scraperConfigurationEntry", nillable=false)
-	public List<ScraperConfigurationEntry> getConfigurationEntries() {
-		return configurationEntries;
+	@XmlElement(name="shop", nillable=false)
+	public List<Shop> getShops() {
+		return shops;
 	}
 
-	public void setConfigurationEntries(List<ScraperConfigurationEntry> configurationEntries) {
-		this.configurationEntries = configurationEntries;
+	public void setShops(List<Shop> shops) {
+		this.shops = shops;
 	}
 }

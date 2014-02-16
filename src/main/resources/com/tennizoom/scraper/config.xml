@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scraperConfiguration>
-    <scraperConfigurationEntry shop="TennisWarehouse" category="BabolatRacquets" url="http://www.tennis-warehouse.com/Babolatracquets.html" />    
+    <shop shop="TennisWarehouse" >
+        <category name="BabolatRacquets" url="http://www.tennis-warehouse.com/Babolatracquets.html">
+            <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/form[@id='compare']/div[@id='content']/table[@class='rac_table']/tbody/tr/td">
+                <field name="name" xPath="p[1]/a/strong">
+                    <valueProcessor processorType="htmlUnescape" />    
+                    <!-- valueProcessor processorType="replace">
+                        <option name="pattern" value="&quot;"/>
+                        <option name="replacement" value="''"/>
+                    </valueProcessor-->
+                </field>
+                <field name="price" xPath="p[3]">
+                    <valueProcessor processorType="regexCleaner">
+                        <option name="regex" value="[a-zA-Z ,$\n]"/>
+                    </valueProcessor>
+                </field>
+                <field name="url" xPath="p[1]/a/@href"/>
+            </dataEntry>
+        </category>
+    </shop>    
 </scraperConfiguration>

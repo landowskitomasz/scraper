@@ -1,12 +1,14 @@
 package com.tennizoom.scraper;
 
+import java.util.Map;
+
+import org.w3c.dom.Document;
+
+import com.tennizoom.scraper.config.Category;
 import com.tennizoom.scraper.config.ScraperConfiguration;
+import com.tennizoom.scraper.config.Shop;
+import com.thoughtworks.xstream.XStream;
 
-
-/**
- * Hello world!
- *
- */
 public class App 
 {
 	public static final boolean DEBUG = true;
@@ -21,6 +23,18 @@ public class App
     	}
     	
     	ScraperConfiguration configuration = ScraperConfiguration.getInstance(configFilePath);
+    	HtmlLoader loader = new HtmlLoader();
     	
+    	for(Shop shop : configuration.getShops()){
+    		for(Category category : shop.getCategories()){
+    			Document document = loader.loadCleanHtml(category.getUrl());
+    			Map<String, Object> data = category.findData(document);
+    			XStream magicApi = new XStream();
+    	        magicApi.registerConverter(new MapEntryConverter());
+    	        magicApi.alias("products", Map.class);
+    	        String xml = magicApi.toXML(data);
+    	        System.out.println(xml);
+    		}
+    	}
     }
 }
