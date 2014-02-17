@@ -1,4 +1,4 @@
-package com.tennizoom.scraper.config;
+package com.tennizoom.scraper.domain;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,23 +7,24 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+
 import com.tennizoom.scraper.App;
 
-@XmlRootElement(name="scraperConfiguration")
-public class ScraperConfiguration {
+@XmlRootElement(name="shop")
+public class Shop {
 	
-	private static Logger log = Logger.getLogger(ScraperConfiguration.class.getName());
+	private static Logger log = Logger.getLogger(Shop.class.getName());
 	
-	private List<ShopConfig> shops = new ArrayList<ShopConfig>();
-
-	public static ScraperConfiguration getInstance(String path){
+	public static Shop getInstance(String path){
 		InputStream is = null;
 		try {
 			if(App.DEBUG){
@@ -35,10 +36,10 @@ public class ScraperConfiguration {
 			}
 			Reader configReader = new InputStreamReader(is); 
 
-			JAXBContext context = JAXBContext.newInstance(new Class[] {ScraperConfiguration.class, ShopConfig.class});
+			JAXBContext context = JAXBContext.newInstance(new Class[] {Shop.class, Category.class, DataEntry.class, DataField.class});
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
-			ScraperConfiguration xPathFilterConfiguration  = (ScraperConfiguration) unmarshaller.unmarshal(configReader);
+			Shop xPathFilterConfiguration  = (Shop) unmarshaller.unmarshal(configReader);
 			return xPathFilterConfiguration;
 
 		} catch (JAXBException e) {
@@ -52,12 +53,15 @@ public class ScraperConfiguration {
 		return null;
 	}
 	
-	@XmlElement(name="shopConfiguration", nillable=false)
-	public List<ShopConfig> getShops() {
-		return shops;
+	private List<Category> categories = new ArrayList<Category>();
+	
+	@XmlElement(name="category", nillable=true)
+	public List<Category> getCategories() {
+		return categories;
 	}
 
-	public void setShops(List<ShopConfig> shops) {
-		this.shops = shops;
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
 	}
+	
 }

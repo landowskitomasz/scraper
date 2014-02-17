@@ -1,4 +1,4 @@
-package com.tennizoom.scraper.config;
+package com.tennizoom.scraper.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.tennizoom.scraper.config;
+package com.tennizoom.scraper.domain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import org.w3c.dom.Node;
 
 import com.tennizoom.scraper.FieldRequiredException;
 import com.tennizoom.scraper.ValidateException;
+import com.tennizoom.scraper.config.ValueProcessorConfig;
 import com.tennizoom.scraper.processor.ValueProcessorHelper;
 
 public class DataField {
@@ -27,7 +28,7 @@ public class DataField {
 	
 	private boolean required = true;
 	
-	private List<ValueProcessor> valueProcessors = new ArrayList<ValueProcessor>();
+	private List<ValueProcessorConfig> valueProcessors = new ArrayList<ValueProcessorConfig>();
 
 	@XmlAttribute(name="name", required=true)
 	public String getName() {
@@ -48,11 +49,11 @@ public class DataField {
 	}
 
 	@XmlElement(name="valueProcessor", nillable=true)
-	public List<ValueProcessor> getValueProcessors() {
+	public List<ValueProcessorConfig> getValueProcessors() {
 		return valueProcessors;
 	}
 
-	public void setValueProcessors(List<ValueProcessor> valueProcessors) {
+	public void setValueProcessors(List<ValueProcessorConfig> valueProcessors) {
 		this.valueProcessors = valueProcessors;
 	}
 

@@ -2,13 +2,13 @@ package com.tennizoom.scraper.processor;
 
 import java.util.List;
 
-import com.tennizoom.scraper.config.ValueProcessor;
+import com.tennizoom.scraper.config.ValueProcessorConfig;
 
 public class ValueProcessorHelper {
 
-	public static String callProcessors(List<ValueProcessor> processors, String value){
+	public static String callProcessors(List<ValueProcessorConfig> processors, String value){
 		String result = value;
-		for(ValueProcessor processor : processors){
+		for(ValueProcessorConfig processor : processors){
 			ValueProcessorExecutor valueProcessorExecutor;
 			switch(processor.getProcessorType()){
 				case regexClean:

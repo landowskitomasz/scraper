@@ -6,7 +6,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class ValueProcessor {
+public class ValueProcessorConfig {
 
 	private ValueProcessorType processorType;
 	

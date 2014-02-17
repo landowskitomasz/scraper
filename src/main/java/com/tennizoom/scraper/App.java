@@ -5,14 +5,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
-import com.tennizoom.scraper.config.Category;
 import com.tennizoom.scraper.config.ScraperConfiguration;
-import com.tennizoom.scraper.config.Shop;
+import com.tennizoom.scraper.config.ShopConfig;
+import com.tennizoom.scraper.domain.Category;
+import com.tennizoom.scraper.domain.Shop;
 import com.thoughtworks.xstream.XStream;
 
 public class App 
@@ -35,25 +37,33 @@ public class App
     		outputDirectory = args[1];
     	}
     	
+    	log.info("Loading configuration file.");
     	ScraperConfiguration configuration = ScraperConfiguration.getInstance(configFilePath);
     	HtmlLoader loader = new HtmlLoader();
     	
-    	for(Shop shop : configuration.getShops()){
+    	for(ShopConfig shopConfig : configuration.getShops()){
     		long start = System.currentTimeMillis();
     		int count = 0;
+    		log.info("Loading shop configuration.");
+    		Shop shop = Shop.getInstance(shopConfig.getPath());
     		for(Category category : shop.getCategories()){
     			Document document = loader.loadCleanHtml(category.getUrl());
     			Map<String, Object> data = category.findData(document);
+    			if(((List<?>)data.get("product")).size()==0){
+    				log.warn("Not found any data in category.                             !!!");
+    				//throw new IllegalStateException("Not found any data in category.");
+    			}
+    			
     			XStream magicApi = new XStream();
     	        magicApi.registerConverter(new MapEntryConverter());
     	        magicApi.alias("products", Map.class);
     	        String xml = magicApi.toXML(data);
-    	        save(outputDirectory+ shop.getName()+ "_"+category.getName()+"_"+dateFormat.format(new Date())+".xml", xml);
+    	        save(outputDirectory+ shopConfig.getName()+ "_"+category.getName()+"_"+dateFormat.format(new Date())+".xml", xml);
     	        ++count;
     		}
+    		 
     		long end = System.currentTimeMillis();
-
-    		log.info("Shop "+shop.getName()+" ("+count+" categories) scraped in "+(end-start) / 1000.0+" s.");
+    		log.info("Shop "+shopConfig.getName()+" ("+count+" categories) scraped in "+(end-start) / 1000.0+" s.");
     	}
     }
     
