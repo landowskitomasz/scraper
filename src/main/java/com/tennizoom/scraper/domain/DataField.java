@@ -1,10 +1,18 @@
 package com.tennizoom.scraper.domain;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -27,6 +35,8 @@ public class DataField {
 	private String xPath;
 	
 	private boolean required = true;
+	
+	private boolean debug;
 	
 	private List<ValueProcessorConfig> valueProcessors = new ArrayList<ValueProcessorConfig>();
 
@@ -66,7 +76,17 @@ public class DataField {
 		this.required = required;
 	}
 
+	@XmlAttribute(name="debug", required=false)
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+
 	public String findFieldValue(Object node) throws FieldRequiredException {
+		log_info("Processing node: " + toXml((Node)node));
 		String value = null;
 		try {
 			XPath xPath = new DOMXPath(getxPath());
@@ -76,9 +96,10 @@ public class DataField {
 			} else {
 				value = String.valueOf(foundEntryValue);
 			}
-
+			log_info("Value before processing " + value);
 			try{
 				value =  ValueProcessorHelper.callProcessors(getValueProcessors(), value);
+				log_info("Value after processing " + value);
 			}
 			catch(ValidateException e){
 				throw new ValidateException("Field '"+getName()+"' has invalid data.", e);
@@ -92,4 +113,30 @@ public class DataField {
 		}
 		return value;
 	}	
+	
+	private void log_info(String string) {
+		if(isDebug()){
+			log.info(string);
+		}
+	}
+
+	String toXml(Node node){
+
+		Transformer transformer;
+		try {
+			StringWriter writer = new StringWriter();
+				transformer = TransformerFactory.newInstance().newTransformer();
+			
+			transformer.transform(new DOMSource(node), new StreamResult(writer));
+			
+			return writer.toString();
+		} catch (TransformerConfigurationException e) {
+			log.error("Unable to conver node to string",e);
+		} catch (TransformerFactoryConfigurationError e) {
+			log.error("Unable to conver node to string",e);
+		} catch (TransformerException e) {
+			log.error("Unable to conver node to string",e);
+		}
+		return null;
+	}
 }

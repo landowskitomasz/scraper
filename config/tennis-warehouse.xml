@@ -16,6 +16,7 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
+                <field name="url" xPath="p[1]/a/@href"/>
             </dataEntry>
         </category>
         <category name="WilsonRacquets" url="http://www.tennis-warehouse.com/Wilsonracquets.html">
@@ -1037,14 +1038,20 @@
         </category>
 
 	<category name="MAADIDAS" url="http://www.tennis-warehouse.com/catpage-MAADIDAS.html">
-            <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table'][1]/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+           <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
+                    </valueProcessor>
+                    <valueProcessor processorType="regexClean">
+                        <option name="regex" value="MSRP.*Sale"/>
+                    </valueProcessor>
+                    <valueProcessor processorType="regexClean">
+                        <option name="regex" value="You Save.*"/>
                     </valueProcessor>
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="MSRP.*Price:"/>
@@ -1056,40 +1063,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MAASICS" url="http://www.tennis-warehouse.com/catpage-MAASICS.html">
             <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
-                    <valueProcessor processorType="htmlUnescape" />
-                    <valueProcessor processorType="regexClean">
-                        <option name="regex" value="Buy 2 .* each."/>
-                    </valueProcessor>
-                    <valueProcessor processorType="regexClean">
-                        <option name="regex" value="MSRP.*Price:"/>
-                    </valueProcessor>
-                    <valueProcessor processorType="regexClean">
-                        <option name="regex" value="[a-zA-Z ,&amp;$\s:]"/>
-                    </valueProcessor>
-                    <valueProcessor processorType="validate" >
-                        <option name="regex" value="^[0-9]*[.][0-9]+$"/>
-                    </valueProcessor>
-                </field>
-                <field name="url" xPath="font/div/a/@href"/>
-            </dataEntry>
-        </category>
-
-	<category name="MADNA" url="http://www.tennis-warehouse.com/catpage-MADNA.html">
-            <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
-                    <valueProcessor processorType="htmlUnescape" />
-                </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1101,22 +1084,55 @@
                         <option name="regex" value="You Save.*"/>
                     </valueProcessor>
                     <valueProcessor processorType="regexClean">
+                        <option name="regex" value="MSRP.*Price:"/>
+                    </valueProcessor>
+                    <valueProcessor processorType="regexClean">
                         <option name="regex" value="[a-zA-Z ,&amp;$\s:]"/>
                     </valueProcessor>
                     <valueProcessor processorType="validate" >
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
+            </dataEntry>
+        </category>
+
+	<category name="MADNA" url="http://www.tennis-warehouse.com/catpage-MADNA.html">
+           <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
+                <field name="name" xPath="div/font/a">
+                    <valueProcessor processorType="htmlUnescape" />
+                </field>
+                <field name="price" xPath="font[2]" >
+                    <valueProcessor processorType="htmlUnescape" />
+                    <valueProcessor processorType="regexClean">
+                        <option name="regex" value="Buy 2 .* each."/>
+                    </valueProcessor>
+                    <valueProcessor processorType="regexClean">
+                        <option name="regex" value="MSRP.*Sale"/>
+                    </valueProcessor>
+                    <valueProcessor processorType="regexClean">
+                        <option name="regex" value="You Save.*"/>
+                    </valueProcessor>
+                    <valueProcessor processorType="regexClean">
+                        <option name="regex" value="MSRP.*Price:"/>
+                    </valueProcessor>
+                    <valueProcessor processorType="regexClean">
+                        <option name="regex" value="[a-zA-Z ,&amp;$\s:]"/>
+                    </valueProcessor>
+                    <valueProcessor processorType="validate" >
+                        <option name="regex" value="^[0-9]*[.][0-9]+$"/>
+                    </valueProcessor>
+                </field>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MAATP" url="http://www.tennis-warehouse.com/catpage-MAATP.html">
             <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1125,10 +1141,10 @@
                         <option name="regex" value="MSRP.*Sale"/>
                     </valueProcessor>
                     <valueProcessor processorType="regexClean">
-                        <option name="regex" value="MSRP.*Price:"/>
+                        <option name="regex" value="You Save.*"/>
                     </valueProcessor>
                     <valueProcessor processorType="regexClean">
-                        <option name="regex" value="You Save.*"/>
+                        <option name="regex" value="MSRP.*Price:"/>
                     </valueProcessor>
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="[a-zA-Z ,&amp;$\s:]"/>
@@ -1137,16 +1153,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MABABOLAT" url="http://www.tennis-warehouse.com/catpage-MABABOLAT.html">
             <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1167,16 +1183,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MADUC" url="http://www.tennis-warehouse.com/catpage-MADUC.html">
-            <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+          <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1197,16 +1213,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MAFILA" url="http://www.tennis-warehouse.com/catpage-MAFILA.html">
-            <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+           <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1227,16 +1243,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MAFRED" url="http://www.tennis-warehouse.com/catpage-MAFRED.html">
             <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1257,16 +1273,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MANHEAD" url="http://www.tennis-warehouse.com/catpage-MANHEAD.html">
-           <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+          <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1287,16 +1303,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MAJOMA" url="http://www.tennis-warehouse.com/catpage-MAJOMA.html">
-           <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+         <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1317,16 +1333,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MAKSWISS" url="http://www.tennis-warehouse.com/catpage-MAKSWISS.html">
-          <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+         <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1347,16 +1363,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MALACOSTE" url="http://www.tennis-warehouse.com/catpage-MALACOSTE.html">
-            <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+           <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1377,16 +1393,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="LININGMA" url="http://www.tennis-warehouse.com/catpage-LININGMA.html">
-            <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+           <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1407,16 +1423,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MALOTTO" url="http://www.tennis-warehouse.com/catpage-MALOTTO.html">
-              <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+          <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1437,16 +1453,16 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
         </category>
 
 	<category name="MANEWBAL" url="http://www.tennis-warehouse.com/catpage-MANEWBAL.html">
               <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
-                <field name="name" xPath="font/div/a">
+                <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />
                 </field>
-                <field name="price" xPath="font/font/span">
+                <field name="price" xPath="font[2]" >
                     <valueProcessor processorType="htmlUnescape" />
                     <valueProcessor processorType="regexClean">
                         <option name="regex" value="Buy 2 .* each."/>
@@ -1467,10 +1483,11 @@
                         <option name="regex" value="^[0-9]*[.][0-9]+$"/>
                     </valueProcessor>
                 </field>
-                <field name="url" xPath="font/div/a/@href"/>
+                <field name="url" xPath="div/font/a/@href"/>
             </dataEntry>
-        </category >
+        </category>
 
+	
 	<!-- category name="MANIKE" url="http://www.tennis-warehouse.com/MANIKE.html">
              <dataEntry name="product" xPath="http://www.tennis-warehouse.com/MANIKE.html">
                 <field name="name" xPath="a[2]">

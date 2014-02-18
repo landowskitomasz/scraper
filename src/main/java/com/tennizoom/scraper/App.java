@@ -1,7 +1,9 @@
 package com.tennizoom.scraper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import org.apache.log4j.Logger;
 import com.tennizoom.scraper.config.ScraperConfiguration;
@@ -29,10 +31,11 @@ public class App
     	if(args.length > 1){
     		outputDirectory = args[1];
     	}
-    	SynchronousQueue<Category> categoriesToScrapp = new SynchronousQueue<Category>();
+    	LinkedBlockingQueue<Task> categoriesToScrapp = new LinkedBlockingQueue<Task>(10);
+    	
     	List<ScraperWorker> workers = new ArrayList<ScraperWorker>();
     	for(int i =0; i < 10; ++i){
-    		ScraperWorker worker = new ScraperWorker(outputDirectory, categoriesToScrapp); 
+    		ScraperWorker worker = new ScraperWorker(categoriesToScrapp); 
     		workers.add(worker);
     		Thread thread = new Thread(worker);
     		thread.start();
@@ -46,10 +49,15 @@ public class App
     		
     		log.info("Loading shop configuration.");
     		Shop shop = Shop.getInstance(shopConfig.getPath());
+    		
+    		XmlExport xmlExport = new XmlExport(outputDirectory, shopConfig.getName());
+    		Thread thread = new Thread(xmlExport);
+    		thread.start();
     		for(Category category : shop.getCategories()){
+    			Task task = new Task(category, xmlExport.getResultPipe());
     			log.info("Category added to queue.");
     			try {
-					categoriesToScrapp.put(category);
+					categoriesToScrapp.put(task);
 				} catch (InterruptedException e) {
 					log.error("Exception while trying to add category to the queue.", e);
 				}
