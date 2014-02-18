@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scraperConfiguration>
-    <shopConfiguration name="tennis-warehouse" path="com/tennizoom/scraper/tennis-warehouse.xml" />
-</scraperConfiguration>

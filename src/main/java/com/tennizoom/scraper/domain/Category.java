@@ -55,6 +55,9 @@ public class Category {
 			log.info("Looking for '"+ entry.getName() + "' entry values.");
 			List<Map<String, Object>> entryValues = entry.findData(document);
 			entries.put(entry.getName(), entryValues);
+			if(entryValues.size() == 0){
+				log.warn("Not found any " + entry.getName() + " data in category!!!");
+			}
 		}
 		
 		return entries;

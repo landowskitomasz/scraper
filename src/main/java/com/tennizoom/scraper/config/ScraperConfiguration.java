@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import com.tennizoom.scraper.App;
 
 @XmlRootElement(name="scraperConfiguration")
 public class ScraperConfiguration {
@@ -26,13 +25,8 @@ public class ScraperConfiguration {
 	public static ScraperConfiguration getInstance(String path){
 		InputStream is = null;
 		try {
-			if(App.DEBUG){
-				ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-				is = classloader.getResourceAsStream(path);
-			}
-			else{
-				is = new FileInputStream(path);
-			}
+			is = new FileInputStream(path);
+			
 			Reader configReader = new InputStreamReader(is); 
 
 			JAXBContext context = JAXBContext.newInstance(new Class[] {ScraperConfiguration.class, ShopConfig.class});
