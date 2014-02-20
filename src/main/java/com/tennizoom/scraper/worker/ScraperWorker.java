@@ -1,14 +1,8 @@
 package com.tennizoom.scraper.worker;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -25,27 +19,40 @@ public class ScraperWorker implements Runnable {
 	
 	private HtmlLoader loader;
 	
-	private LinkedBlockingQueue<Task> categoriesToProcess;
+	private LinkedBlockingQueue<Task> tasksQueue;
 	
 	public ScraperWorker(LinkedBlockingQueue<Task> categoriesToProcess){
 		this.loader = new HtmlLoader();
-		this.categoriesToProcess = categoriesToProcess;
+		this.tasksQueue = categoriesToProcess;
 		log.info("Worker created.");
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
 		log.info("Worker started.");
 		try{
-			for(Task task = categoriesToProcess.poll(3, TimeUnit.SECONDS); task != null; task = categoriesToProcess.poll()){
-				log.info("Categry to scrap found.");
-				Category category = task.getCategory();
-				Document document = loader.loadCleanHtml(category.getUrl());
-				Map<String, Object> data = category.findData(document);
-				
-				for(DataEntry dataEntry: category.getDataEntries()){
-					for(Map<String, Object> entryValue : ((List<Map<String, Object>>)data.get(dataEntry.getName()))){
-						task.putResult(entryValue);
+			for(Task task = tasksQueue.poll(3, TimeUnit.SECONDS); task != null; task = tasksQueue.poll()){
+				try{
+					task.registerProcessing();
+					log.info("Categry to scrap found.");
+					Category category = task.getCategory();
+					Document document = loader.loadCleanHtml(category.getUrl());
+					Map<String, Object> data = category.findData(document);
+					
+					for(DataEntry dataEntry: category.getDataEntries()){
+						for(Map<String, Object> entryValue : ((List<Map<String, Object>>)data.get(dataEntry.getName()))){
+							task.putResult(entryValue);
+						}
+					}
+				}
+				catch(Exception e){
+					if(task.isProcessingAvailable()){
+						log.error("Unable to complite task (category "+task.getCategory().getName()+"). Task added to queue again.", e);
+						tasksQueue.put(task);
+					}
+					else{
+						log.error("Task (category "+task.getCategory().getName()+") processed 3 times with filure. Task dismissed.", e);
 					}
 				}
 			}

@@ -21,6 +21,10 @@ public class ScraperConfiguration {
 	private static Logger log = Logger.getLogger(ScraperConfiguration.class.getName());
 	
 	private List<ShopConfig> shops = new ArrayList<ShopConfig>();
+	
+	private String outputDirectory;
+	
+	private int threadsNumber = 1;
 
 	public static ScraperConfiguration getInstance(String path){
 		InputStream is = null;
@@ -53,5 +57,23 @@ public class ScraperConfiguration {
 
 	public void setShops(List<ShopConfig> shops) {
 		this.shops = shops;
+	}
+	
+	@XmlElement(name="outputDirectory")
+	public String getOutputDirectory() {
+		return outputDirectory;
+	}
+
+	public void setOutputDirectory(String outputDirectory) {
+		this.outputDirectory = outputDirectory;
+	}
+
+	@XmlElement(name="threadsNumber")
+	public int getThreadsNumber() {
+		return threadsNumber;
+	}
+
+	public void setThreadsNumber(int threadsNumber) {
+		this.threadsNumber = threadsNumber;
 	}
 }

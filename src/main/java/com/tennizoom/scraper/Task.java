@@ -2,10 +2,7 @@ package com.tennizoom.scraper;
 
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-
 import org.apache.log4j.Logger;
-
 import com.tennizoom.scraper.domain.Category;
 
 public class Task {
@@ -15,6 +12,8 @@ public class Task {
 	private Category category;
 	
 	private LinkedBlockingQueue<Map<String, Object>> resutsPipe;
+	
+	private int processingNumber = 3;
 	
 	public Task(Category category, LinkedBlockingQueue<Map<String, Object>> resutsPipe){
 		this.category = category;
@@ -31,5 +30,13 @@ public class Task {
 		} catch (InterruptedException e) {
 			log.error("Can't put result to the pipe.", e);
 		}
+	}
+	
+	public boolean isProcessingAvailable(){
+		return processingNumber > 0;
+	}
+	
+	public void registerProcessing(){
+		--processingNumber;
 	}
 }

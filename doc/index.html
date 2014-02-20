@@ -1,0 +1,165 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Scraper - dokumentacja</title>
+	</head>
+	
+	<body>
+		<div style="width: 700px ; margin-left: auto ; margin-right: auto ;">
+			<h3>
+				Instalacja i uruchomienie aplikacji.
+			</h3>
+			
+			<p>
+				Aplikacja posiada następującą strukturę katalogów:
+			</p>
+			<ul>
+				<li>bin - katalog w którym znajduje się skompliowany plik jar z kodem aplikacji, oraz skrypt do jej uruchomienia.</li>
+				<li>conf - tutaj znajduje się konfiguracja aplikacji. Główny plik konfiguracyjny <i>conf.xml</i> oraz pliki konfiguracyjne sklepów. </li>
+				<li>logs - w katalogu tym znajdują się logi aplikacji - w razie problemów z jej działaniem należy je przeglądnąć</li>
+				<li>out - domyślny katalog do którego są wrzucane pliki wynikowe, można go zmienić w konfiguracji.</li>
+			</ul>
+			<p>	
+				Jedynym wymaganiem softwerowym do uruchomienia aplikacja jest instlacja maszyny wirtualej javy.
+				Aplikacja jest wieloplatformowa ale posiada przygotowany tylko skrypt shellowy wspomagający jej uruchomienie. 
+				Aby uruchomić aplikację pod systemem Windows należy stworzyć analogiczny skrypt batch, 
+				lub znajdując się w katalogu bin z lini poleceń uruchomić:
+			</p>
+			<div style="width: 500 px;" >
+				<i>
+				java -cp scraper-1.0-SNAPSHOT-jar-with-dependencies.jar com.tennizoom.scraper.App ../config/config.xml
+				</i>
+			</div>
+			<p>
+				W takim przypadku parameterem aplikacji jest ścieżka do pliku konfiguracyjnego.
+			</p>
+			<p>
+			<b>Należy pamiętać aby aplikację uruchamiać będąc w katalogu bin.</b> W przeciwnym przypadku program może nie znaleźć 
+			plików konfiguracyjnych ponieważ wszystkie ścieżki podawane są jako względne w stosunku do katalogu bin. 
+			</p>
+			
+			<h3>Konfiguracja aplikacji</h3>
+			<h4>Główny plik konfiguracyjny</h4>
+			<p>
+			Konfiguracja aplikacji odbywa się za pomocą plików xml znajdujących się w katalogu config. Plikiem głównym 
+			jest <i>config.xml</i>. Plik może wyglądać następująco:
+			</p>
+			 
+			<div style="width: 600px; background-color:#CCCCCC;">
+				&#60;?xml version="1.0" encoding="UTF-8"?&#62; </br>
+				&#60;scraperConfiguration&#62; </br>
+				    &#60;outputDirectory&#62;../out/&#60;/outputDirectory&#62; </br>
+				    &#60;threadsNumber&#62;10&#60;/threadsNumber&#62; </br>
+				    
+				    &#60;shopConfiguration name="tennis-warehouse" path="../config/tennis-warehouse.xml" /&#62; </br>
+				    
+				&#60;/scraperConfiguration&#62;
+			</div> 
+			<p>
+				W korzeniu <i>scraperConfiguration</i> znajdują się takie nody jak:
+			</p>
+			<ul>
+			<li><i>outputDirectory</i> - ścieżka do katalogu wynikowego, do którego będa zapisywane dane wyjściowe.</li>
+			<li><i>threadsNumber</i> - ilość wątków które będą zbierać dane. Należy pamiętać że jeden wątek zbiera jedną kategorię
+				dlatego ilośc wątków mniejsza od ilości kategorii nie ma sensu.</li>
+			<li><i>shopConfiguration</i> - informacje o konfiguracji sklepu. Atrybut <i><b>name</b></i> wykorzystywany jest do nazwania
+				pliku wyjściowego w którym będą znajdować się dane sklepu. Natomiast <i><b>path</b></i> jest ścieżką do pliku z 
+				konfiguracją kategorii sklepu. (Należy pamiętać że jeżeli ścieżka jest względna do musi ona być względna w stosunku do katalogu bin).
+				Aby dodać kolejny sklep do scrapowania należy dodać kolejny node <i>shopConfiguration</i> z odpowiednio ustawionymi atrybutami.</li>
+			</ul>
+			<h4>Konfiguracja sklepu</h4>
+			
+			<p> Konfiguracja każdego sklepu musi znajdować się w osobnym pliku xml. Przykładowy plik może wygladac następująco.
+			</p>
+			<div style="width: 700px; background-color:#CCCCCC;">
+				&#60;shop&#62; </br>
+		        &#60;category name="BabolatRacquets" url="http://www.tennis-warehouse.com/Babolatracquets.html"&#62; </br>
+		            &#60;dataEntry name="product" xPath="/html/body/div[@id='wrapper']"&#62; </br>
+		                &#60;field name="name" xPath="p[1]/a/strong"&#62; </br>
+		                    &#60;valueProcessor processorType="htmlUnescape" /&#62; </br>
+		                &#60;/field&#62; </br>
+		                &#60;field name="price" xPath="p[last()]"&#62; </br>
+		                    
+		                    &#60;valueProcessor processorType="regexClean"&#62; </br>
+		                        &#60;option name="regex" value="Buy 2 .* each."/&#62; </br>
+		                    &#60;/valueProcessor&#62; </br>
+		                    &#60;valueProcessor processorType="regexClean"&#62; </br>
+		                        &#60;option name="regex" value="[a-zA-Z ,&amp;amp;$\s]"/&#62; </br>
+		                    &#60;/valueProcessor&#62; </br>
+		                    &#60;valueProcessor processorType="validate" &#62; </br>
+		                        &#60;option name="regex" value="^[0-9]*[.][0-9]+$"/&#62; </br>
+		                    &#60;/valueProcessor&#62; </br>
+		                &#60;/field&#62; </br>
+		                &#60;field name="url" xPath="p[1]/a/@href"/&#62; </br>
+		            &#60;/dataEntry&#62; </br>
+		        &#60;/category&#62; </br>
+		        &#60;/shop&#62; </br>
+			</div>
+			<p>
+			Korzeniem xmla jest w tym przypadku <i>shop</i>, nie zawiera on żadnych dodatkowych atrybutów, natomiast elementami 
+			korzenia jest lista konfiguracji poszczególnych kategorii.
+			</p> 
+			<p>
+				Node do konfiguracji pojedynczej kategorii zawiera dwa atrybuty:
+			</p>
+			<ul>
+			<li>name- nazwa kategorii</li>
+			<li>url - link do strony www z lista produktów danej kategorii.</li>
+			</ul>
+			<p>
+			oraz element zawierający opis zbieranych danych.
+			</p>
+			<p>
+			 Jako że przyjęto założenie że strona www kategorii zawierać powinna listę produków, dlatego niezbędne jest 
+			 zdefiniowanie zapytania xPath które wyciągnie z html'a elementy tej listy. Zapytanie to znajduje się w atrybucie 
+			 <i>xPath</i> elementu <i>dataEntry</i>. Element ten zawiera również atrybut <i>name</i> który jest wykorzystywany 
+			 do nazwania elementów zapisywanych w pliku wyjściowym. 
+			</p>
+			<p> Elementy listy wyciągnięte zapytaniem xPath są również fragmentami xmlowymi które następnie odpytujemy w celu wyciągnięcia 
+			konkretnych pól. Definicje tych zpytań oraz nazwy pól znajdują sie w odpowiednio nazwanych
+			atrybutach elementu <i>field</i> </p>
+			
+			<p>
+			Dane wyciągnięte za pomocą xPath są zabrudzone i przed wstawieniem ich do pliku wyjściowego należy je przeczyścić. 
+			Do tego celu służą value procesory które są definiowane per pole i znajdują się w elementach <i>valueProcessor</i>
+			oraz przyjmują parametry zdefiniowane w elementach <i>option</i>.
+			</p>
+			<p><b>Należy pamiętać że value procesory uruchamiane są w kolejności takiej jak zdefioniowana w xml.</b> 
+			Dlatego uruchomienie value procesora validate przed oczyszczeniem danych przez np regexClean może spowodować że 
+			dane nie będa się w ogóle zbierały.</p>
+			<p>
+			 W aplikacji zdefiniowane sa następujące typy value procesorów:
+			</p>
+			<ul>
+			<li><i><b>htmlUnescape</b></i> - zamienia kody htmlowe na odpowiadające im znaki. Zastosowanie ma to np dla
+			odczytu nazwy produktów które zawierają jednostkę "cal". Procesor ten nie przyjmuje żadnych parametrów.</li>
+			
+			<li><i><b>regexClean</b></i> - procesor służący do usunięcia z tekstu wyjściowego fragmentu tekstu pasującego 
+			do podanego wyrażenia reguralnego. Przujmuje on jeden parametr o nazwie <i>regex</i> i wartości zawierającej
+			<a href="http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html" >java regural expression. </a></li>
+			<li><i><b>validate</b></i> - procesor służący do zadbania o jakość danych wyjściowych. Jako parametr 
+			przyjmuje wyrażenie reguralne które służy do sprawdzenia czy wartość wyjściowa jest poprawna. Jeśli 
+			wartość nie jest poprawna to aplikacja przerywa zbieranie danych dla danej kategorii i wyrzuca do logów
+			informacje o błedzie.  </li>
+			</ul>
+			<h4>Debugowanie</h4>
+			<p>
+			W celu ułatwienia tworzenia plików konfiguracyjnych element field został wyposażony w dodatkowy atrybut 
+			<i>debug</i> przyjmujący wartość <i>true</i> lub <i>false</i>.
+			Po ustawieniu tego atrybutu na true podczas wyszukiwania informacji o danym polu do logów zostaną wyrzucone 
+			dodatkowe informacje takie jak:  
+			</p>
+			<ul>
+			<li> xml elementu listy w którym szukamy wartość pola.</li>
+			<li> znaleziona wartość przed uruchomieniem value procesorów.</li>
+			<li> wartość pola po oczyszczeniu przez value procesory.</li>
+			</ul>
+			<h3>Kontakt</h3>
+			<p>
+			W razie pytań proszę o kontakt pod adresem email:</br>
+			landowskitomasz@gmail.com
+			</p>
+			<p><center><i>Tomasz Landowski (landowskitomasz@gmail.com) © 2014</i></center></p>
+		</div>
+	</body>
+</html>

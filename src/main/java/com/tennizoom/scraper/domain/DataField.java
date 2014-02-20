@@ -86,7 +86,7 @@ public class DataField {
 	}
 
 	public String findFieldValue(Object node) throws FieldRequiredException {
-		log_info("Processing node: " + toXml((Node)node));
+		log_info("Processing node: \n" + toXml((Node)node));
 		String value = null;
 		try {
 			XPath xPath = new DOMXPath(getxPath());
@@ -96,10 +96,10 @@ public class DataField {
 			} else {
 				value = String.valueOf(foundEntryValue);
 			}
-			log_info("Value before processing " + value);
+			log_info("Value before processing: " + value);
 			try{
 				value =  ValueProcessorHelper.callProcessors(getValueProcessors(), value);
-				log_info("Value after processing " + value);
+				log_info("Value after processing: " + value);
 			}
 			catch(ValidateException e){
 				throw new ValidateException("Field '"+getName()+"' has invalid data.", e);
@@ -121,7 +121,6 @@ public class DataField {
 	}
 
 	String toXml(Node node){
-
 		Transformer transformer;
 		try {
 			StringWriter writer = new StringWriter();

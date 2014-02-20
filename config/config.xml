@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scraperConfiguration>
-    <shopConfiguration name="tennis-warehouse" path="config/tennis-warehouse.xml" />
+    <outputDirectory>../out/</outputDirectory>
+    <threadsNumber>10</threadsNumber>
+    
+    <shopConfiguration name="tennis-warehouse" path="../config/tennis-warehouse.xml" />
 </scraperConfiguration>

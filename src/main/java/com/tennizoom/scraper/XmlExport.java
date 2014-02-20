@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -50,6 +49,9 @@ public class XmlExport implements Runnable {
 			log.info("Opening output file.");
 			
 			file = new File(outputDirectory + name +"-"+dateFormat.format(new Date())+".xml");
+			if(!file.exists()) {
+				file.createNewFile();
+			}
 			fop = new FileOutputStream(file);
  
 			if (!file.exists()) {
@@ -57,7 +59,6 @@ public class XmlExport implements Runnable {
 			}
 	
 			fop.write("<products>\n".getBytes());
-			
 			try{
 				for(Map<String, Object> result = resutsPipe.poll(30, TimeUnit.SECONDS); result != null; result = resutsPipe.poll(30, TimeUnit.SECONDS)){
 					String xml = magicApi.toXML(result);
@@ -74,41 +75,14 @@ public class XmlExport implements Runnable {
 			log.info(file.getAbsolutePath() + " saved.");
 		} catch (IOException e) {
 				log.error("Unable to save file.", e);
-			} finally {
-				try {
-					if (fop != null) {
-						fop.close();
-					}
-				} catch (IOException e) {
-					log.error("Unable to close file.", e);
+		} finally {
+			try {
+				if (fop != null) {
+					fop.close();
 				}
+			} catch (IOException e) {
+				log.error("Unable to close file.", e);
 			}
-	}
-
-	/*private static void save(String fileName, String xml){
-    	FileOutputStream fop = null;
-		File file;
-		try {
- 
-			file = new File(fileName);
-			fop = new FileOutputStream(file);
- 
-			if (!file.exists()) {
-				file.createNewFile();
-			}
- 
-			byte[] contentInBytes = xml.getBytes();
- 
-			fop.write(contentInBytes);
-			fop.flush();
-			fop.close();
- 
-			log.info(file.getAbsolutePath() + " saved.");
 		}
-    }
-	*/
-	//
-    //magicApi.alias("products", Map.class);
-    //String xml = magicApi.toXML(data);
-    //save(outputDirectory+task.getName()+"_"+dateFormat.format(new Date())+".xml", xml);
+	}
 }
