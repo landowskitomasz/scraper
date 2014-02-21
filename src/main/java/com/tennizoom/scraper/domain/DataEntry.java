@@ -14,8 +14,8 @@ import org.jaxen.XPath;
 import org.jaxen.dom.DOMXPath;
 import org.w3c.dom.Document;
 
-import com.tennizoom.scraper.FieldRequiredException;
-import com.tennizoom.scraper.ValidateException;
+import com.tennizoom.scraper.exception.FieldRequiredException;
+import com.tennizoom.scraper.exception.ValidateException;
 
 public class DataEntry {
 	

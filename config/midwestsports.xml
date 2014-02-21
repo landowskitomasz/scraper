@@ -1,0 +1,27 @@
+<shop>
+	<category name="MensTennisShoeSpecials" url="http://www.midwestsports.com/mens-sale-tennis-shoes/c/500063/pgnum/1/pgsize/45/" >
+	    <pagination 
+	        xPath="/html/body/div[@id='page-category']/div[@class='wrapper']/div[@id='page-wrap']/div[@id='page']/div[@id='center-col']/div[2]/div[@id='grid-control'][1]/div[@id='paging']/span[@id='pagenumbers']/a/@href" 
+	        regex="http://www.midwestsports.com/mens-sale-tennis-shoes/c/500063/pgnum/[0-9]*/pgsize/45/" />
+    	<dataEntry name="product" xPath="/html/body/div[@id='page-category']/div[@class='wrapper']/div[@id='page-wrap']/div[@id='page']/div[@id='center-col']/div[2]/div[@id='grid-wrap']/ul/li">
+    	    <field name="name" xPath="h3/a" >
+    	        <valueProcessor processorType="htmlUnescape" />
+    	    </field>
+    	    <field name="price" xPath="p[@class='price']" >
+            	<valueProcessor processorType="regexClean">
+                	<option name="regex" value="[a-zA-Z \s]"/>
+				</valueProcessor>
+				<valueProcessor processorType="regexClean">
+                	<option name="regex" value="\$.*\$"/>
+				</valueProcessor>
+				<valueProcessor processorType="regexClean">
+                	<option name="regex" value="\$"/>
+				</valueProcessor>
+                <valueProcessor processorType="validate" >
+                	<option name="regex" value="^[0-9]*[.][0-9]+$"/>
+                </valueProcessor>
+            </field>
+            <field name="url" xPath="h3/a/@href" />
+		</dataEntry>
+	</category>
+</shop>

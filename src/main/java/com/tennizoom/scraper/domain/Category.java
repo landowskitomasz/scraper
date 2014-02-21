@@ -1,5 +1,10 @@
 package com.tennizoom.scraper.domain;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,9 +13,12 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class Category {
 
@@ -20,7 +28,11 @@ public class Category {
 	
 	private String url;
 	
+	private String saveDirectory;
+	
 	private List<DataEntry> dataEntries = new ArrayList<DataEntry>();
+	
+	private Pagination pagination;
 
 	@XmlAttribute(name="name", required=true)
 	public String getName() {
@@ -40,6 +52,15 @@ public class Category {
 		this.url = url;
 	}
 	
+	@XmlAttribute(name="saveTo", required=false)
+	public String getSaveDirectory() {
+		return saveDirectory;
+	}
+
+	public void setSaveDirectory(String saveDirectory) {
+		this.saveDirectory = saveDirectory;
+	}
+	
 	@XmlElement(name="dataEntry", nillable=false)
 	public List<DataEntry> getDataEntries() {
 		return dataEntries;
@@ -50,6 +71,9 @@ public class Category {
 	}
 
 	public Map<String, Object> findData(Document document) {
+		if(!StringUtils.isEmpty(getSaveDirectory())){
+			saveDocumentToFile(document);
+		}
 		Map<String, Object> entries = new HashMap<String, Object>();
 		for(DataEntry entry : getDataEntries()){
 			log.info("Looking for '"+ entry.getName() + "' entry values.");
@@ -62,5 +86,76 @@ public class Category {
 		
 		return entries;
 	}
+
+	private void saveDocumentToFile(Document document) {
+		File directory = new File(getSaveDirectory());
+		if(!directory.exists()){
+			directory.mkdirs();
+		}
+		
+		OutputFormat format = new OutputFormat(document); 
+		format.setLineWidth(65);
+		format.setIndenting(true);
+		format.setIndent(2);
+		Writer out = new StringWriter();
+		XMLSerializer serializer = new XMLSerializer(out, format);
+
+		try {
+			serializer.serialize(document);
+
+			File file = new File(directory.getAbsolutePath()+ "/" + getName()+ ".html");
+			if(!file.exists()){
+				file.createNewFile();
+			}
+			
+			FileWriter fw = new FileWriter(file);
+			
+			fw.write(out.toString());
+			fw.close();
+		} catch (IOException e) {
+
+		}
+	}
+	
+	@XmlElement(name="pagination", nillable=true)
+	public Pagination getPagination() {
+		return pagination;
+	}
+
+	public void setPagination(Pagination pagination) {
+		this.pagination = pagination;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Category other = (Category) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (url == null) {
+			if (other.url != null)
+				return false;
+		} else if (!url.equals(other.url))
+			return false;
+		return true;
+	}
+	
 	
 }

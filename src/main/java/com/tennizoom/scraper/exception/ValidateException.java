@@ -1,4 +1,4 @@
-package com.tennizoom.scraper;
+package com.tennizoom.scraper.exception;
 
 public class ValidateException extends RuntimeException{
 

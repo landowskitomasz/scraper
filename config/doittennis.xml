@@ -1,0 +1,25 @@
+<shop>
+	<category name="TennisRacquets" url="http://www.doittennis.com/catalog/tennis-racquets/page/1" >
+	    <pagination 
+	        xPath="/HTML/body/div[@class='container']/div[@id='catalog']/div[@class='wrapper']/div[@class='content-primary']/div[@id='products']/div[@class='control-container'][1]/div[@class='controls top']/div[@class='paginate']/dl/dd[@class='num']/a/@href" 
+	        regex="http://www.doittennis.com/catalog/tennis-racquets/page/[0-9]*" />
+    	<dataEntry name="product" xPath="/HTML/body/div[@class='container']/div[@id='catalog']/div[@class='wrapper']/div[@class='content-primary']/div[@id='products']/div[@class='product-container']/div[@class='products']/ul[@class='grid']/li/form/a">
+    	    <field name="name" xPath="span[@class='title']" >
+    	        <valueProcessor processorType="htmlUnescape" />
+    	    </field>
+    	    <field name="price" xPath="span[last()]/p[@class='price']">
+    	        <valueProcessor processorType="htmlUnescape" />
+    	        <valueProcessor processorType="regexClean">
+                	<option name="regex" value=".*\|"/>
+				</valueProcessor>
+            	<valueProcessor processorType="regexClean">
+                	<option name="regex" value="[a-zA-Z $\s\?]"/>
+				</valueProcessor>
+                <valueProcessor processorType="validate" >
+                	<option name="regex" value="^[0-9]*[.][0-9]+$"/>
+                </valueProcessor>
+            </field>
+            <field name="url" xPath="@href" />
+		</dataEntry>
+	</category>
+</shop>

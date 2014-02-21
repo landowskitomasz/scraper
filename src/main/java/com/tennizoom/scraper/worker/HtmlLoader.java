@@ -1,4 +1,4 @@
-package com.tennizoom.scraper;
+package com.tennizoom.scraper.worker;
 
 import java.io.IOException;
 import java.net.URL;
@@ -12,12 +12,14 @@ import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 import org.w3c.dom.Document;
 
+import com.tennizoom.scraper.exception.HtmlLoaderException;
+
 
 public class HtmlLoader {
 	
 	private static Logger log = Logger.getLogger(HtmlLoader.class.getName());
 	
-	public Document loadCleanHtml(String urlString) {
+	public Document loadCleanHtml(String urlString) throws HtmlLoaderException {
 		log.info("Loading html from: " + urlString);
 		try {
 			CleanerProperties props = new CleanerProperties();
@@ -31,14 +33,15 @@ public class HtmlLoader {
 			    new URL(urlString)
 			);
 		
-			log.info("Html loaded.");
-			return new DomSerializer(props, true).createDOM(tagNode);
+			Document document = new DomSerializer(props, true).createDOM(tagNode);
+			
+			log.info("Html loaded succesfully.");
+			return document;
 		} catch (IOException e) {
-			log.error("Unable to load html page.",e);
+			throw new HtmlLoaderException("Unable to load html page.",e);
 		} catch (ParserConfigurationException e) {
-			log.error("Unable to load html page.",e);
+			throw new HtmlLoaderException("Unable to load html page.",e);
 		}
-		return null;
 	}
 
 }

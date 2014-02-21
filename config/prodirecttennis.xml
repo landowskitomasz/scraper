@@ -1,0 +1,56 @@
+<shop>
+	<category name="womens-tennis-shoes" url="http://www.prodirecttennis.com/lists/womens-tennis-shoes.aspx?listName=womens-tennis-shoes&amp;p=1" >
+	    <pagination 
+	        xPath="/html/body/form[@id='aspnetForm']/div[@class='centerPageContent']/div[@class='pageContentBackgroundWhite']/div[@id='ContentArea']/div[@id='columncontainer']/div[@id='columnholderright']/div[@id='columnholderleft']/div[@id='columnright']/div[@class='listRightArea']/div[@id='MainProductArea']/div[1]/div[1]/a/@href" 
+	        regex="http://www.prodirecttennis.com/lists/womens-tennis-shoes.aspx\?listName=womens-tennis-shoes&amp;p=[0-9]*" />
+    	<dataEntry name="product" xPath="/html/body/form[@id='aspnetForm']/div[@class='centerPageContent']/div[@class='pageContentBackgroundWhite']/div[@id='ContentArea']/div[@id='columncontainer']/div[@id='columnholderright']/div[@id='columnholderleft']/div[@id='columnright']/div[@class='listRightArea']/div[@id='MainProductArea']/div[2]/div">
+    	    <field name="name" xPath="a/span[@class='list_description block']" >
+    	        <valueProcessor processorType="htmlUnescape" />
+    	    </field>
+    	    <field name="price" xPath="a/span[@class='list_price block']">
+    	        
+				<valueProcessor processorType="regexClean">
+                	<option name="regex" value="&amp;pound;"/>
+				</valueProcessor>
+            	<valueProcessor processorType="regexClean">
+                	<option name="regex" value="[a-zA-Z :\s]"/>
+				</valueProcessor>
+                <valueProcessor processorType="validate" >
+                	<option name="regex" value="^[0-9]*[.][0-9]+$"/>
+                </valueProcessor>
+            </field>
+            <field name="url" xPath="a/@href" >
+                <valueProcessor processorType="append" >
+                	<option name="value" value="http://www.prodirecttennis.com"/>
+                </valueProcessor>
+            </field>
+		</dataEntry>
+	</category>
+	<category name="babolat-tennis-rackets" url="http://www.prodirecttennis.com/lists/babolat-tennis-rackets.aspx?listName=babolat-tennis-rackets&amp;p=1" >
+	    <pagination 
+	        xPath="/html/body/form[@id='aspnetForm']/div[@class='centerPageContent']/div[@class='pageContentBackgroundWhite']/div[@id='ContentArea']/div[@id='columncontainer']/div[@id='columnholderright']/div[@id='columnholderleft']/div[@id='columnright']/div[@class='listRightArea']/div[@id='MainProductArea']/div[1]/div[1]/a/@href" 
+	        regex="http://www.prodirecttennis.com/lists/babolat-tennis-rackets.aspx\?listName=babolat-tennis-rackets&amp;p=[0-9]*" />
+    	<dataEntry name="product" xPath="/html/body/form[@id='aspnetForm']/div[@class='centerPageContent']/div[@class='pageContentBackgroundWhite']/div[@id='ContentArea']/div[@id='columncontainer']/div[@id='columnholderright']/div[@id='columnholderleft']/div[@id='columnright']/div[@class='listRightArea']/div[@id='MainProductArea']/div[2]/div">
+    	    <field name="name" xPath="a/span[@class='list_description block']" >
+    	        <valueProcessor processorType="htmlUnescape" />
+    	    </field>
+    	    <field name="price" xPath="a/span[@class='list_price block']">
+    	        
+				<valueProcessor processorType="regexClean">
+                	<option name="regex" value="&amp;pound;"/>
+				</valueProcessor>
+            	<valueProcessor processorType="regexClean">
+                	<option name="regex" value="[a-zA-Z :\s]"/>
+				</valueProcessor>
+                <valueProcessor processorType="validate" >
+                	<option name="regex" value="^[0-9]*[.][0-9]+$"/>
+                </valueProcessor>
+            </field>
+            <field name="url" xPath="a/@href" >
+                <valueProcessor processorType="append" >
+                	<option name="value" value="http://www.prodirecttennis.com"/>
+                </valueProcessor>
+            </field>
+		</dataEntry>
+	</category>
+</shop>

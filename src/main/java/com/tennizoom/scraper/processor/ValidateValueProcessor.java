@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.tennizoom.scraper.ValidateException;
 import com.tennizoom.scraper.config.ValueProcessorOption;
+import com.tennizoom.scraper.exception.ValidateException;
 
 public class ValidateValueProcessor  implements ValueProcessorExecutor{
 

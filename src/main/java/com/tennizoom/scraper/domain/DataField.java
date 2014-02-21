@@ -21,9 +21,9 @@ import org.jaxen.XPath;
 import org.jaxen.dom.DOMXPath;
 import org.w3c.dom.Node;
 
-import com.tennizoom.scraper.FieldRequiredException;
-import com.tennizoom.scraper.ValidateException;
 import com.tennizoom.scraper.config.ValueProcessorConfig;
+import com.tennizoom.scraper.exception.FieldRequiredException;
+import com.tennizoom.scraper.exception.ValidateException;
 import com.tennizoom.scraper.processor.ValueProcessorHelper;
 
 public class DataField {
@@ -95,6 +95,9 @@ public class DataField {
 				value = ((Node) foundEntryValue).getTextContent();
 			} else {
 				value = String.valueOf(foundEntryValue);
+			}
+			if(!StringUtils.isEmpty(value)){
+				value = value.trim();
 			}
 			log_info("Value before processing: " + value);
 			try{

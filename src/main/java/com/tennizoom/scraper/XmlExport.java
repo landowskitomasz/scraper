@@ -24,6 +24,8 @@ public class XmlExport implements Runnable {
 	private String name;
 	
 	private LinkedBlockingQueue<Map<String, Object>> resutsPipe = new LinkedBlockingQueue<Map<String, Object>>(30);
+
+	private boolean finished = false;
 	
 	public XmlExport(String outputDirectory, String name) {
 		this.outputDirectory = outputDirectory;
@@ -60,7 +62,7 @@ public class XmlExport implements Runnable {
 	
 			fop.write("<products>\n".getBytes());
 			try{
-				for(Map<String, Object> result = resutsPipe.poll(30, TimeUnit.SECONDS); result != null; result = resutsPipe.poll(30, TimeUnit.SECONDS)){
+				for(Map<String, Object> result = resutsPipe.poll(20, TimeUnit.SECONDS); result != null || !finished; result = resutsPipe.poll(2, TimeUnit.SECONDS)){
 					String xml = magicApi.toXML(result);
 					fop.write((xml+"\n").getBytes());
 				}
@@ -84,5 +86,10 @@ public class XmlExport implements Runnable {
 				log.error("Unable to close file.", e);
 			}
 		}
+	}
+
+	public void setAllResultsCompleted() {
+		log.info("Collecting data finished.");
+		this.finished = true;
 	}
 }

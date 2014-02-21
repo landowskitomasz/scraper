@@ -23,6 +23,9 @@ public class ValueProcessorHelper {
 				case validate:
 					valueProcessorExecutor = new ValidateValueProcessor(processor.getOptions());
 					break;
+				case append:
+					valueProcessorExecutor = new AppendValueProcessor(processor.getOptions());
+					break;
 				default:
 					throw new IllegalStateException("Unknown processor: " +processor.getProcessorType());
 			}

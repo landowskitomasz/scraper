@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scraperConfiguration>
     <outputDirectory>../out/</outputDirectory>
-    <threadsNumber>10</threadsNumber>
+    <threadsNumber>1</threadsNumber>
     
-    <shopConfiguration name="tennis-warehouse" path="../config/tennis-warehouse.xml" />
+    <!-- shopConfiguration name="tennis-warehouse" path="../config/tennis-warehouse.xml" /-->
+    <!-- shopConfiguration name="mcourt" path="../config/mcourt.xml" /-->
+    <!-- shopConfiguration name="directsportstennis" path="../config/directsportstennis.xml" /-->
+    <!-- shopConfiguration name="tennisexpress" path="../config/tennisexpress.xml" />
+    <shopConfiguration name="holabirdsports" path="../config/holabirdsports.xml" />
+    <shopConfiguration name="doittennis" path="../config/doittennis.xml"/>
+    <shopConfiguration name="midwestsports" path="../config/midwestsports.xml"/-->
+    <shopConfiguration name="prodirecttennis" path="../config/prodirecttennis.xml"/>
 </scraperConfiguration>
