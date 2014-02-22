@@ -22,6 +22,10 @@ public class HtmlLoader {
 	public Document loadCleanHtml(String urlString) throws HtmlLoaderException {
 		log.info("Loading html from: " + urlString);
 		try {
+			//WebView browser = new WebView();
+			//WebEngine webEngine = browser.getEngine();
+			//webEngine.load("http://mySite.com");
+			
 			CleanerProperties props = new CleanerProperties();
 			props.setAllowHtmlInsideAttributes(true);
 	        props.setAllowMultiWordAttributes(true);
