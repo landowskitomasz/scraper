@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -35,7 +34,7 @@ public class ScraperWorker implements Runnable {
 	public void run() {
 		log.info("Worker started.");
 		try{
-			for(Task task = tasksStore.getTasks().poll(3L, TimeUnit.SECONDS); task != null; task = tasksStore.getTasks().poll(3L, TimeUnit.SECONDS)){
+			for(Task task = tasksStore.getTask(); task != null; task = tasksStore.getTask()){
 					
 				Category category = task.getCategory();
 				

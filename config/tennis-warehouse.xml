@@ -1460,7 +1460,7 @@
             </dataEntry>
         </category>
 
-	<category name="MANEWBAL" url="http://www.tennis-warehouse.com/catpage-MANEWBAL.html">
+	<category name="MANEWBAL" url="http://www.tennis-warehouse.com/catpage-MANEWBAL.html" >
               <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[@class='app_table']/tbody/tr/td">
                 <field name="name" xPath="div/font/a">
                     <valueProcessor processorType="htmlUnescape" />

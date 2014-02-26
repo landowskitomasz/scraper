@@ -115,4 +115,10 @@ public class ResultsHandlerImpl implements ResultsHandler{
 		}
 	}
 
+	@Override
+	public void processingStarted(String name, String key) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

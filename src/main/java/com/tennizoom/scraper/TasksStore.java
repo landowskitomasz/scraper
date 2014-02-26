@@ -2,7 +2,6 @@ package com.tennizoom.scraper;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
 
 import com.tennizoom.scraper.domain.Category;
 
@@ -16,5 +15,5 @@ public interface TasksStore {
 	
 	void createTasks(List<Category> categories, String shopName);
 
-	BlockingQueue<Task> getTasks();
+	Task getTask() throws InterruptedException;
 }

@@ -21,9 +21,8 @@
 			</ul>
 			<p>	
 				Jedynym wymaganiem softwerowym do uruchomienia aplikacja jest instlacja maszyny wirtualej javy.
-				Aplikacja jest wieloplatformowa ale posiada przygotowany tylko skrypt shellowy wspomagający jej uruchomienie. 
-				Aby uruchomić aplikację pod systemem Windows należy stworzyć analogiczny skrypt batch, 
-				lub znajdując się w katalogu bin z lini poleceń uruchomić:
+				Aplikacja jest wielo platformowa, posiada również skrypt shell do jej uruchomienia pod systemami UNIX oraz OSx. 
+				Aby uruchomić aplikację pod systemem Windows należy znajdując się w katalogu bin z lini poleceń uruchomić:
 			</p>
 			<div style="width: 500 px;" >
 				<i>
@@ -31,32 +30,35 @@
 				</i>
 			</div>
 			<p>
-				W takim przypadku parameterem aplikacji jest ścieżka do pliku konfiguracyjnego.
+				Powyżesze polecenie uruchamia aplikację znajdującą się w pliku z rozszerzeniem jar. Aplikacja przujmuje 
+				jeden parameter którym jest ścieżka do głownego pliku konfiguracyjnego. 
 			</p>
 			<p>
 			<b>Należy pamiętać aby aplikację uruchamiać będąc w katalogu bin.</b> W przeciwnym przypadku program może nie znaleźć 
-			plików konfiguracyjnych ponieważ wszystkie ścieżki podawane są jako względne w stosunku do katalogu bin. 
+			pozostałych plików konfiguracyjnych ponieważ wszystkie ścieżki podawane są jako względne w stosunku do katalogu bin. 
 			</p>
 			
 			<h3>Konfiguracja aplikacji</h3>
 			<h4>Główny plik konfiguracyjny</h4>
 			<p>
 			Konfiguracja aplikacji odbywa się za pomocą plików xml znajdujących się w katalogu config. Plikiem głównym 
-			jest <i>config.xml</i>. Plik może wyglądać następująco:
+			jest <i>config.xml</i>. Posiada on informacje o ścieżce do katalogu w którym program ma zapisać dane wyjściowe,
+			definicję ilości wątktów które będą współbieżnie przetwarzać kategorie oraz listę sklepów.
+			Przykładowy plik konfiguracyjny może wyglądać następująco:
 			</p>
 			 
 			<div style="width: 600px; background-color:#CCCCCC;">
 				&#60;?xml version="1.0" encoding="UTF-8"?&#62; </br>
 				&#60;scraperConfiguration&#62; </br>
-				    &#60;outputDirectory&#62;../out/&#60;/outputDirectory&#62; </br>
-				    &#60;threadsNumber&#62;10&#60;/threadsNumber&#62; </br>
-				    
-				    &#60;shopConfiguration name="tennis-warehouse" path="../config/tennis-warehouse.xml" /&#62; </br>
+				&ensp; &#60;outputDirectory&#62;../out/&#60;/outputDirectory&#62; </br>
+				&ensp; &#60;threadsNumber&#62;10&#60;/threadsNumber&#62; </br>
+				    </br>
+				&ensp; &#60;shopConfiguration name="tennis-warehouse" path="../config/tennis-warehouse.xml" /&#62; </br>
 				    
 				&#60;/scraperConfiguration&#62;
 			</div> 
 			<p>
-				W korzeniu <i>scraperConfiguration</i> znajdują się takie nody jak:
+				W korzeniu <i>scraperConfiguration</i> znajdują się następujące elementy:
 			</p>
 			<ul>
 			<li><i>outputDirectory</i> - ścieżka do katalogu wynikowego, do którego będa zapisywane dane wyjściowe.</li>
@@ -69,46 +71,118 @@
 			</ul>
 			<h4>Konfiguracja sklepu</h4>
 			
-			<p> Konfiguracja każdego sklepu musi znajdować się w osobnym pliku xml. Przykładowy plik może wygladac następująco.
+			<p> Konfiguracja każdego sklepu musi znajdować się w osobnym pliku xml. W danym sklepie może znajdować się wiele kategorii, 
+			natomiast dane zebrane w ramach kategorii nie są w żaden sposób grupowane i trafiają do jednego wspólnego pliku wynikowego
+			dla całego sklepu. Plik wynikowy ma nazwę taką jak nazwa sklepu zdefiniowana w głównym pliku konfiguracyjnym z dopisaną 
+			datą zbierania danych. 
 			</p>
+			<p>Konfigurację pojedynczej kategorii najlepiej opisać na przykładzie:</p>
 			<div style="width: 700px; background-color:#CCCCCC;">
 				&#60;shop&#62; </br>
-		        &#60;category name="BabolatRacquets" url="http://www.tennis-warehouse.com/Babolatracquets.html"&#62; </br>
-		            &#60;dataEntry name="product" xPath="/html/body/div[@id='wrapper']"&#62; </br>
-		                &#60;field name="name" xPath="p[1]/a/strong"&#62; </br>
-		                    &#60;valueProcessor processorType="htmlUnescape" /&#62; </br>
-		                &#60;/field&#62; </br>
-		                &#60;field name="price" xPath="p[last()]"&#62; </br>
-		                    
-		                    &#60;valueProcessor processorType="regexClean"&#62; </br>
-		                        &#60;option name="regex" value="Buy 2 .* each."/&#62; </br>
-		                    &#60;/valueProcessor&#62; </br>
-		                    &#60;valueProcessor processorType="regexClean"&#62; </br>
-		                        &#60;option name="regex" value="[a-zA-Z ,&amp;amp;$\s]"/&#62; </br>
-		                    &#60;/valueProcessor&#62; </br>
-		                    &#60;valueProcessor processorType="validate" &#62; </br>
-		                        &#60;option name="regex" value="^[0-9]*[.][0-9]+$"/&#62; </br>
-		                    &#60;/valueProcessor&#62; </br>
-		                &#60;/field&#62; </br>
-		                &#60;field name="url" xPath="p[1]/a/@href"/&#62; </br>
-		            &#60;/dataEntry&#62; </br>
-		        &#60;/category&#62; </br>
+		        &ensp;&#60;category name="BabolatRacquets" url="http://www.tennis-warehouse.com/Babolatracquets.html"&#62; </br>
+		        &ensp;&ensp;&#60;dataEntry name="product" xPath="/html/body/div[@id='wrapper']"&#62; </br>
+		        &ensp;&ensp;&ensp;&#60;field name="name" xPath="p[1]/a/strong"&#62; </br>
+		        &ensp;&ensp;&ensp;&ensp;&#60;valueProcessor processorType="htmlUnescape" /&#62; </br>
+		        &ensp;&ensp;&ensp;&#60;/field&#62; </br>
+		        &ensp;&ensp;&ensp;&#60;field name="price" xPath="p[last()]"&#62; </br>
+		        &ensp;&ensp;&ensp;&ensp;&#60;valueProcessor processorType="regexClean"&#62; </br>
+		        &ensp;&ensp;&ensp;&ensp;&ensp;&#60;option name="regex" value="Buy 2 .* each."/&#62; </br>
+		        &ensp;&ensp;&ensp;&ensp;&#60;/valueProcessor&#62; </br>
+		        &ensp;&ensp;&ensp;&ensp;&#60;valueProcessor processorType="regexClean"&#62; </br>
+		        &ensp;&ensp;&ensp;&ensp;&ensp;&#60;option name="regex" value="[a-zA-Z ,&amp;amp;$\s]"/&#62; </br>
+		        &ensp;&ensp;&ensp;&ensp;&#60;/valueProcessor&#62; </br>
+		        &ensp;&ensp;&ensp;&ensp;&#60;valueProcessor processorType="validate" &#62; </br>
+		        &ensp;&ensp;&ensp;&ensp;&ensp;&#60;option name="regex" value="^[0-9]*[.][0-9]+$"/&#62; </br>
+		        &ensp;&ensp;&ensp;&ensp;&#60;/valueProcessor&#62; </br>
+		        &ensp;&ensp;&ensp;&#60;/field&#62; </br>
+		        &ensp;&ensp;&ensp;&#60;field name="url" xPath="p[1]/a/@href"/&#62; </br>
+		        &ensp;&ensp;&#60;/dataEntry&#62; </br>
+		        &ensp;&#60;/category&#62; </br>
 		        &#60;/shop&#62; </br>
 			</div>
 			<p>
-			Korzeniem xmla jest w tym przypadku <i>shop</i>, nie zawiera on żadnych dodatkowych atrybutów, natomiast elementami 
-			korzenia jest lista konfiguracji poszczególnych kategorii.
+			Korzeniem xmla jest <i>shop</i>, nie zawiera on żadnych dodatkowych atrybutów. Elementami znajdującymi 
+			się wewnątrz sklepu są kategorie. Każada kategoria posiada nazwę oraz adres url z którego będą pobierane dane.
 			</p> 
 			<p>
-				Node do konfiguracji pojedynczej kategorii zawiera dwa atrybuty:
+				Nazwa oraz url są zapisane za pomocą atrybutów, wszystkie atrybuty elementu <i>category</i> przedstawia tabela:
+			</p>
+			<table border="1">
+				<tr>
+					<th>Atrybut</th>
+					<th>Wymagany</th>
+					<th>Opis</th>
+				</tr>
+				<tr>
+					<td>name</td>
+					<td>tak</td>
+					<td>nazwa kategorii</td>
+				</tr>
+				<tr>
+					<td>url</td>
+					<td>tak</td>
+					<td>link do strony www z lista produktów danej kategorii.</td>
+				</tr>
+				<tr>
+					<td>saveTo</td>
+					<td>nie</td>
+					<td>opcja nie wymagana, zalecane żeby w wersji finalej jej nie podawać, służy do wskazania 
+					katalogu względnego w stosunku do katalogu bin w którym ma zostać zapisana pobrana strona www.
+					Plik będzie miał nazwę taką jak nazwa kategori oraz rozszerzenie html. </td>
+				</tr>
+			</table>
+			<p>
+			Wewnątrz elementu kategorii znajdują się definicja paginacji oraz opis zbieranych danych. 
+			</p>
+			<h4>Konfiguracja paginacji</h4>
+			<p>
+			Do skonfigurowania paginacji służy dodatkowy element xml znajdujący się wewnątrz elementu <i>category</i> o nazwie 
+			<i>pagination</i>. Element ten posiada następujące atrybuty:
+			</p>
+			<table border="1">
+				<tr>
+					<th>Atrybut</th>
+					<th>Wymagany</th>
+					<th>Opis</th>
+				</tr>
+				<tr>
+					<td>xPath</td>
+					<td>tak</td>
+					<td>Zapytanie xPath służące od zlokalizowania na pobranej stronie linków do kolejnych kategorii.</td>
+				</tr>
+				<tr>
+					<td>regex</td>
+					<td>tak</td>
+					<td>Wyrażenie regularne sprawdzające czy wyłoniony adres kolejnej strony pasuje do schematu.</td>
+				</tr>
+			</table>
+			<p>
+			Obsługe standardowej paginacji można opisać w następujący sposób. 
+			</p>
+			<p>
+			Aplikacja pobiera zdefiniowaną w kategorii stronę www, i dodaje ją do listy już odwiedzonych stron www w ramach 
+			danej kategorii. Po pobraniu strony uruchamiane jest zapytanie wyciagające linki do kolejnych stron i linki te 
+			odkładane są do listy stron do odwiedzenia. Po pobraniu danych z aktualnej strony program bierzę kolejną stronę do odwiedzenia 
+			z listy, pobiera jej zawartość, oznacza jako odwiedzoną i wyszukuje linki do kolejnych stron. Znalezione linki trafiają do listy stron do odwiedzenia
+			ale tylko pod warunkiem że wcześniej nie były już odwiedzone i że nie znajdują się juz na liście stron do odwiedzenia,
+			następnie sekwencja się powtarza aż lista stron do odwiedzenia się nie wyczerpie. 
+			</p>
+			<p>
+			Opisane podejście pociąga za sobą następujące skutki:
 			</p>
 			<ul>
-			<li>name- nazwa kategorii</li>
-			<li>url - link do strony www z lista produktów danej kategorii.</li>
+				<li>można powiedzieć że unikalność strony w ramach kategorii określana jest na podstawie adresu url</li>
+				<li>bardzo często zdarza się że podając link do kategorii sklep www wyświetla pierwszą jej stronę 
+				mimo że link nie zawiera informacji o jej numerze, można powiedzieć że pierwsza strona może posiadać w takim 
+				wypadku dwa linki z numerem strony oraz bez numeru.</li>
+				<li>jeśli w konfiguracji podamy jako link do kategorii adress www bez numeru strony to program oznaczy że odwiedził
+				stronę bez numeru strony, następnie przeszuka linki do kolejnych stron i znajdzie link do tej samej strony ale
+				już taki który posiada numer strony. W rezultacie pierwsza strona zostanie pobrana 2 krotnie</li>
+				<li><b>Aby uniknąć pobierania pierwszej strony dwukrotnie należy się upewnić że podany link do kategorii 
+				posiada numer strony.</b> Można próbować obejść ten problem podając link np do drugiej strony ale jeśli okaże się że lista
+				produktów z danej kategorii skurczy się tak bardzo że będzie się mieściła na jednej stronie, to żadne dane się już nie zbiorą.</li>
 			</ul>
-			<p>
-			oraz element zawierający opis zbieranych danych.
-			</p>
+			<h4>Konfiguracja zbieranych danych</h4>
 			<p>
 			 Jako że przyjęto założenie że strona www kategorii zawierać powinna listę produków, dlatego niezbędne jest 
 			 zdefiniowanie zapytania xPath które wyciągnie z html'a elementy tej listy. Zapytanie to znajduje się w atrybucie 
@@ -137,10 +211,15 @@
 			<li><i><b>regexClean</b></i> - procesor służący do usunięcia z tekstu wyjściowego fragmentu tekstu pasującego 
 			do podanego wyrażenia reguralnego. Przujmuje on jeden parametr o nazwie <i>regex</i> i wartości zawierającej
 			<a href="http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html" >java regural expression. </a></li>
-			<li><i><b>validate</b></i> - procesor służący do zadbania o jakość danych wyjściowych. Jako parametr 
+			<li><i><b>validate</b></i> - procesor służący do sprawdzenia jakości danych wyjściowych. Jako parametr 
 			przyjmuje wyrażenie reguralne które służy do sprawdzenia czy wartość wyjściowa jest poprawna. Jeśli 
 			wartość nie jest poprawna to aplikacja przerywa zbieranie danych dla danej kategorii i wyrzuca do logów
 			informacje o błedzie.  </li>
+			<li><i><b>append</b></i> - Podczas zbierania adresów url czasem okazuje się ze wyciągnięte linki nie posiadają nazwy 
+			hosta ponieważ nie jest on konieczny do poprawnego działania strony. W takich wypadkach aby w pliku wynikowym xml
+			znalazły się linki z hostem, konieczne jest jego ręczne dodanie. Możemy to zrobić za pomocą value processora <i>append</i>.
+			Processor przyjmuje dwa parametry: <i>direction</i> o wartościach <i>suffix</i> lub <i>prefix</i>, oraz <i>value</i> -
+			string który ma być dodany na końcu lub na początku znalezionych danych. </li>
 			</ul>
 			<h4>Debugowanie</h4>
 			<p>
@@ -153,6 +232,28 @@
 			<li> xml elementu listy w którym szukamy wartość pola.</li>
 			<li> znaleziona wartość przed uruchomieniem value procesorów.</li>
 			<li> wartość pola po oczyszczeniu przez value procesory.</li>
+			</ul>
+			<h3>Logi aplikacji</h3>
+			<p>
+			Przebieg synchronizacji jest monitorowany na bierząco i część z ważniejszych jej kroków jest wyświetlana na konsoli 
+			i zapisywana do plików z logami. Pliki te znajdują się w katalogu <i>logs</i> oraz są grupowane po dacie. 
+			W jednym pliku znajdować się mogą tylko logi z jednego dnia. Aktualne logi znajdują się zawsze w pliku z rozszerzeniem <i>log</i> 
+			bez dodatkowyuch numerków. W przypadku numerowanych plików, im większy numer tym starszy plik.  
+			</p>
+			<p>Logi podzielone sa na trzy sekcje, INFO, WARNING oraz ERROR. </p>
+			<ul>
+			<li>INFO - są to dane typowo informacyjne, np że została pobrana dana strona, albo do jakiego pliku zostały 
+			zapisane pobrane dane.</li>
+			<li>WARNING - ostrzeżenie na które warto zwrócić uwagę, często pokazują się ostrzeżenia o tym że wymagana cena
+			nie została znaleziona. Wynika to z tego że podając zapytanie xPath oprócz elementów listy 
+			wybierane sa również puste rekordy z tabelki. Często ma to miesce w przypadku tenis warehouse.
+			Warto przeglądać logi typu WARNING bo może się okazać że zbierają się niepoprawne dane.</li>
+			<li>ERROR - błąd podczas działania programu, tutaj sytuacja jest najbardziej poważna, bo oznacza że coś 
+			poszło nie tak, np. nie pobrała się strona o podanym adresie lub plik konfiguracyjny jest niepoprawny.
+			Przy logach typu error zawsze znajduje się komunikat o błędzie w języku angielskim i informacje o 
+			linijkach w kodzie gdzie wystąpił problem. Jeśli komentarz jest mało czytelny, można pisać na maila podanego w kontakcie, 
+			postaram się rozwiązać problem i wyjaśnić o co chodzi.
+			Jako error wyświetlany jest również niepowodzenie walidacji wykonanej za pomocą value processora typu <i>validate</i>. </li>
 			</ul>
 			<h3>Kontakt</h3>
 			<p>

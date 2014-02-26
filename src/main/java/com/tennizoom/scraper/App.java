@@ -33,7 +33,7 @@ public class App
     		outputDirectory = configuration.getOutputDirectory();
     	}
     	
-    	ResultsHandler resultsHandler = new ResultsHandlerImpl(outputDirectory);
+    	ResultsHandler resultsHandler = new StatisticsWrapper(new ResultsHandlerImpl(outputDirectory));
     	TasksStore tasksStore = new TasksStoreImpl(resultsHandler);
     	
     	List<ScraperWorker> workers = new ArrayList<ScraperWorker>();
@@ -44,7 +44,6 @@ public class App
     		thread.setName("Scraper worker " + i);
     		thread.start();
     	}
-    	
     	
     	for(ShopConfig shopConfig : configuration.getShops()){
     		log.info("Loading shop configuration.");

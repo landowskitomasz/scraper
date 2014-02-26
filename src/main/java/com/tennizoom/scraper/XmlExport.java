@@ -15,7 +15,7 @@ import com.thoughtworks.xstream.XStream;
 
 public class XmlExport implements Runnable {
 	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 	
 	private static Logger log = Logger.getLogger(XmlExport.class.getName());
 	

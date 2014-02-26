@@ -3,9 +3,9 @@ package com.tennizoom.scraper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import com.tennizoom.scraper.domain.Category;
@@ -28,8 +28,7 @@ public class TasksStoreImpl implements TasksStore {
 	private Semaphore tasksAccessSemaphore = new Semaphore(1);
 	
 	@Override
-	public BlockingQueue<Task> getTasks() {
-		try {
+	public Task getTask() throws InterruptedException {
 			tasksAccessSemaphore.acquire();
 			if(tasksToProcessQueue.isEmpty() && !suspendedTasksQueue.isEmpty()){
 				try {
@@ -43,10 +42,11 @@ public class TasksStoreImpl implements TasksStore {
 			}
 			
 			tasksAccessSemaphore.release();
-			return tasksToProcessQueue;
-		} catch (InterruptedException e) {
-			throw new IllegalStateException(e);
-		}
+			Task task = tasksToProcessQueue.poll(3L, TimeUnit.SECONDS);
+			if(task != null){
+				resultsHandler.processingStarted(task.getShopName(), task.getCategory().getName());
+			}
+			return task;
 	}
 
 	@Override
@@ -97,5 +97,4 @@ public class TasksStoreImpl implements TasksStore {
 			}
 		}
 	}
-
 }
