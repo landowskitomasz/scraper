@@ -33,6 +33,9 @@ public class Shop {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
 			Shop xPathFilterConfiguration  = (Shop) unmarshaller.unmarshal(configReader);
+			for(Category category : xPathFilterConfiguration.getCategories()){
+				category.setDefaultValueProcessors(xPathFilterConfiguration.getDefaultValueProcessors());
+			}
 			return xPathFilterConfiguration;
 
 		} catch (JAXBException e) {
@@ -48,6 +51,8 @@ public class Shop {
 	
 	private List<Category> categories = new ArrayList<Category>();
 	
+	private DefaultValueProcessors defaultValueProcessors = new DefaultValueProcessors();
+	
 	@XmlElement(name="category", nillable=true)
 	public List<Category> getCategories() {
 		return categories;
@@ -55,6 +60,15 @@ public class Shop {
 
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
+	}
+
+	@XmlElement(name="defaultValueProcessors", nillable=true)
+	public DefaultValueProcessors getDefaultValueProcessors() {
+		return defaultValueProcessors;
+	}
+
+	public void setDefaultValueProcessors(DefaultValueProcessors defaultValueProcessors) {
+		this.defaultValueProcessors = defaultValueProcessors;
 	}
 	
 }

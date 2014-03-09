@@ -24,7 +24,7 @@ public class Pagination {
 
 	private String xPath;
 	
-	private String regex;
+ 	private String regex = ".*";
 	
 	@XmlAttribute(name="xPath", required=true)
 	public String getxPath() {

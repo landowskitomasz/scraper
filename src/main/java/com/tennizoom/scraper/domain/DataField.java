@@ -21,12 +21,13 @@ import org.jaxen.XPath;
 import org.jaxen.dom.DOMXPath;
 import org.w3c.dom.Node;
 
+import com.tennizoom.scraper.config.DefaultValueProcessorsPropagation;
 import com.tennizoom.scraper.config.ValueProcessorConfig;
 import com.tennizoom.scraper.exception.FieldRequiredException;
 import com.tennizoom.scraper.exception.ValidateException;
 import com.tennizoom.scraper.processor.ValueProcessorHelper;
 
-public class DataField {
+public class DataField implements Cloneable {
 
 	private static Logger log = Logger.getLogger(DataField.class.getName());
 
@@ -37,6 +38,8 @@ public class DataField {
 	private boolean required = true;
 	
 	private boolean debug;
+	
+	private DefaultValueProcessorsPropagation callDefaultValueProcessors = DefaultValueProcessorsPropagation.after; 
 	
 	private List<ValueProcessorConfig> valueProcessors = new ArrayList<ValueProcessorConfig>();
 
@@ -84,24 +87,42 @@ public class DataField {
 	public void setDebug(boolean debug) {
 		this.debug = debug;
 	}
+	
+	
 
-	public String findFieldValue(Object node) throws FieldRequiredException {
+	public DefaultValueProcessorsPropagation getCallDefaultValueProcessors() {
+		return callDefaultValueProcessors;
+	}
+	
+	@XmlAttribute(name="callDefaultValueProcessors", required=false)
+	public void setCallDefaultValueProcessors(
+			DefaultValueProcessorsPropagation callDefaultValueProcessors) {
+		this.callDefaultValueProcessors = callDefaultValueProcessors;
+	}
+
+	public String findFieldValue(Object node, List<ValueProcessorConfig> defaultValueProcessors) throws FieldRequiredException {
 		log_info("Processing node: \n" + toXml((Node)node));
 		String value = null;
 		try {
-			XPath xPath = new DOMXPath(getxPath());
-			Object foundEntryValue = xPath.selectSingleNode(node);
+			Object foundEntryValue = node;
+			if(!StringUtils.isEmpty(getxPath())){
+				XPath xPath = new DOMXPath(getxPath());
+				foundEntryValue = xPath.selectSingleNode(node);
+			}
+			
 			if (foundEntryValue instanceof Node) {
 				value = ((Node) foundEntryValue).getTextContent();
 			} else {
 				value = String.valueOf(foundEntryValue);
 			}
+			
 			if(!StringUtils.isEmpty(value)){
 				value = value.trim();
 			}
 			log_info("Value before processing: " + value);
 			try{
-				value =  ValueProcessorHelper.callProcessors(getValueProcessors(), value);
+				
+				value =  ValueProcessorHelper.callProcessors(getAllValueProcessors(defaultValueProcessors), value);
 				log_info("Value after processing: " + value);
 			}
 			catch(ValidateException e){
@@ -117,13 +138,34 @@ public class DataField {
 		return value;
 	}	
 	
+	private List<ValueProcessorConfig> getAllValueProcessors(
+			List<ValueProcessorConfig> defaultValueProcessors) {
+		List<ValueProcessorConfig> valueProcessors = new ArrayList<ValueProcessorConfig>();
+		switch (callDefaultValueProcessors) {
+		case after:
+			valueProcessors.addAll(getValueProcessors());
+			valueProcessors.addAll(defaultValueProcessors);
+			break;
+		case before:
+			valueProcessors.addAll(defaultValueProcessors);
+			valueProcessors.addAll(getValueProcessors());
+			break;
+		case none:
+		default:
+			valueProcessors.addAll(getValueProcessors());
+			break;
+		}
+
+		return valueProcessors;
+	}
+
 	private void log_info(String string) {
 		if(isDebug()){
 			log.info(string);
 		}
 	}
 
-	String toXml(Node node){
+	protected String toXml(Node node){
 		Transformer transformer;
 		try {
 			StringWriter writer = new StringWriter();

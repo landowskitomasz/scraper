@@ -20,7 +20,7 @@ import org.w3c.dom.Document;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
-public class Category {
+public class Category implements Cloneable {
 
 	private static Logger log = Logger.getLogger(Category.class.getName());
 
@@ -33,6 +33,8 @@ public class Category {
 	private List<DataEntry> dataEntries = new ArrayList<DataEntry>();
 	
 	private Pagination pagination;
+
+	private DefaultValueProcessors defaultValueProcessors = new DefaultValueProcessors();
 
 	@XmlAttribute(name="name", required=true)
 	public String getName() {
@@ -77,7 +79,7 @@ public class Category {
 		Map<String, Object> entries = new HashMap<String, Object>();
 		for(DataEntry entry : getDataEntries()){
 			log.info("Looking for '"+ entry.getName() + "' entry values.");
-			List<Map<String, Object>> entryValues = entry.findData(document);
+			List<Map<String, Object>> entryValues = entry.findData(document, defaultValueProcessors);
 			entries.put(entry.getName(), entryValues);
 			if(entryValues.size() == 0){
 				log.warn("Not found any " + entry.getName() + " data in category "+ getName() +" !!!");
@@ -155,6 +157,15 @@ public class Category {
 		} else if (!url.equals(other.url))
 			return false;
 		return true;
+	}
+
+	public void setDefaultValueProcessors(
+			DefaultValueProcessors defaultValueProcessors) {
+		this.defaultValueProcessors = defaultValueProcessors;		
+	}
+	
+	public DefaultValueProcessors getDefaultValueProcessors(){
+		return defaultValueProcessors;
 	}
 	
 	
