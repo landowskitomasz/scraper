@@ -33,7 +33,9 @@ public class App
     		outputDirectory = configuration.getOutputDirectory();
     	}
     	
-    	ResultsHandler resultsHandler = new StatisticsWrapper(new ResultsHandlerImpl(outputDirectory));
+    	ResultsHandler resultsHandler = new Md5IdGenerationHandlerWraper(
+    			new StatisticsWrapper(
+    					new ResultsHandlerImpl(outputDirectory)));
     	TasksStore tasksStore = new TasksStoreImpl(resultsHandler);
     	
     	List<ScraperWorker> workers = new ArrayList<ScraperWorker>();

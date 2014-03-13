@@ -233,6 +233,46 @@
 			<li> znaleziona wartość przed uruchomieniem value procesorów.</li>
 			<li> wartość pola po oczyszczeniu przez value procesory.</li>
 			</ul>
+			<h3>Domyślne value processory</h3>
+			<p>
+			 W ramach danego sklepu mamy możliwość zdefiniowania domyślnych value processorów. W tym celu w elementcie 
+			 <i>shop</i> umieszczamy dodatkowy element <i>defaultValueProcessors</i> w którym znajdują się defniją się 
+			 definicje value processorów dla poszczególnych pól: 
+			 
+			</p>
+			<div style="width: 700px; background-color:#CCCCCC;">
+			&#60;defaultValueProcessors&#62; </br>
+        	&ensp;&#60;field name="price"&#62; </br>
+            &ensp;&ensp;&#60;valueProcessor processorType="regexClean"&#62; </br>
+            &ensp;&ensp;&ensp;&#60;option name="regex" value="[a-zA-Z \s]"/&#62; </br>
+			&ensp;&ensp;&#60;/valueProcessor&#62; </br>
+			&ensp;&ensp;&#60;valueProcessor processorType="regexClean"&#62; </br>
+			&ensp;&ensp;&ensp;&#60;option name="regex" value="\$.*\$"/&#62; </br>
+			&ensp;&ensp;&#60;/valueProcessor&#62; </br>
+			&ensp;&ensp;&#60;valueProcessor processorType="regexClean"&#62; </br>
+            &ensp;&ensp;&ensp;&#60;option name="regex" value="\$"/&#62; </br>
+			&ensp;&ensp;&#60;/valueProcessor&#62; </br>
+            &ensp;&ensp;&#60;valueProcessor processorType="validate" &#62; </br>
+            &ensp;&ensp;&ensp;&#60;option name="regex" value="^[0-9]*[.][0-9]+$"/&#62; </br>
+            &ensp;&ensp;&#60;/valueProcessor&#62; </br>
+        	&ensp;&#60;/field&#62; </br>
+         	&ensp;&#60;field name="name"&#62; </br>
+          	&ensp;&ensp;&#60;valueProcessor processorType="htmlUnescape" /&#62; </br>
+        	&ensp;&#60;/field&#62; </br>
+    		&#60;/defaultValueProcessors&#62; </br>
+				
+			</div>
+			<p>
+			Mając zdefiniowane domyślne value processory, w ramach danego pola w kategrii możemy określić 
+			czy używać domyślnych value processorów i w jakiej kolejności. Możemy to ustawienie zmianiać za pomocą 
+			atrybutu <i>callDefaultValueProcessors</i>. Przyjmuje on 3 wartości:
+			</p>
+			<ul>
+			<li> none</li>
+			<li>after</li>
+			<li>before</li>
+			</ul>
+			
 			<h3>Logi aplikacji</h3>
 			<p>
 			Przebieg synchronizacji jest monitorowany na bierząco i część z ważniejszych jej kroków jest wyświetlana na konsoli 
@@ -255,6 +295,31 @@
 			postaram się rozwiązać problem i wyjaśnić o co chodzi.
 			Jako error wyświetlany jest również niepowodzenie walidacji wykonanej za pomocą value processora typu <i>validate</i>. </li>
 			</ul>
+			<h3>Wyrażenia reguralne</h3>
+			<ul>
+				<li> 
+		 		<b><i>Buy 2 .* each\.</i></b> - usuwa ciąg znaków zaczynający się od 'Buy 2' i kończący na 'each.' Pomiędzy 'Buy 2' a 'each.' mogą znajdować się dodwolne znaki.  
+		       </li>
+				<li> 
+		       <b><i>[a-zA-Z,&amp;\$\s]</i></b> - usuwa z ciągu znaków, znaki znajdujące się pomiędzy nawiasami klamrowymi, przy czym w przypadku a-z znaki oznaczają wszystkie litery alfabetu od a do z. 
+         				Czyli podsumowując usuwa znaki od 'a' do 'z' oraz od 'A' do 'Z', oraz ',', '$', '&' i dowolny biały znak (spacja, tabulator, enter itd.).
+         		</li>
+				<li> 
+        		<b><i>^[0-9]*[.][0-9]+$</i></b> - regex najczęsciej służący do walidacji, sprawdza czy testowana watość jest liczą zmienno przecinkową.
+				</li>
+				<li><b><i>Was.*Sale Price</i></b> - Usuwa ciąg znaków zaczynający się od 'Was' później dowolne znaki i kończący się na 'Sale Price' </li>
+				<li><b><i>Was.*Price:</i></b> - Usuwa ciąg znaków zaczynający się od 'Was' później dowolne znaki i kończący się na 'Price:'</li>
+				<li><b><i>MSRP.*Sale</i></b> - Usuwa ciąg znaków zaczynający się od 'MSRP' później dowolne znaki i kończący się na 'Sale'</li>
+				<li><b><i>MSRP.*Price:</i></b> - Usuwa ciąg znaków zaczynający się od 'MSRP' później dowolne znaki i kończący się na 'Price:'</li>
+				<li><b><i>You Save.*</i></b> - Usuwa ciąg znaków zaczynający się od 'You Save' i wszystkie znaki aż do końca czyszczonego tekstu.</li>
+				<li><b><i>&amp;pound;</i></b> - Usuówa znak  &amp;pound; </li>
+				<li><b><i>\$.*\$</i></b> - usówa wszystko co znajduje się pomiędzy znakami $, ze znakami $ włącznie.</li>
+				<li><b><i>.*\</i>|</b> - usówa wszystkie znaki od początku czysczonego tekstu do znaku | włącznie.</li>
+			</ul>
+			<p>Należy pamiętać że bardzo ważna jest kolejność stosowania wyrażeń reguralnych, ponieważ często bazujemy na tym co zostało po usunięciu danych znaków we wcześniejszym wyrażeniu. </p>
+			Regexy stosowane w paginacji najcześciej posiadają wyrażenie [0-9]*, które oznacza dowolną liczbę naturalną. Np.
+			<ul><li>
+			http://www.doittennis.com/catalog/tennis-racquets/page/[0-9]*</li></ul>
 			<h3>Kontakt</h3>
 			<p>
 			W razie pytań proszę o kontakt pod adresem email:</br>

@@ -20,7 +20,7 @@
             </dataEntry>
         </category>
         
-        
+         
         
         <category name="WilsonRacquets" url="http://www.tennis-warehouse.com/Wilsonracquets.html">
             <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/form[@id='compare']/div[@id='content']/table[@class='rac_table']/tbody/tr/td">
@@ -82,6 +82,8 @@
                 <field name="url" xPath="p[1]/a/@href"/>
             </dataEntry>
         </category>
+        
+       
         <category name="DunlopRacquets" url="http://www.tennis-warehouse.com/Dunlopracquets.html">
             <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/form[@id='compare']/div[@id='content']/table[@class='rac_table']/tbody/tr/td">
                 <field name="name" xPath="p[1]/a/strong">
@@ -547,7 +549,7 @@
                 <field name="url" xPath="table[@class='shoegrid']/tbody/tr/td[2]/p[1]/b/a/@href"/>
             </dataEntry>
         </category>
-
+        
 	<category name="MSLINING" url="http://www.tennis-warehouse.com/catpage-MSLINING.html">
             <dataEntry name="product" xPath="/html/body/div[@id='wrapper']/div[@id='main']/div[@id='content']/table[1]/tbody/tr/td">
                 <field name="name" xPath="table[@class='shoegrid']/tbody/tr/td[2]/p[1]/b/a">
